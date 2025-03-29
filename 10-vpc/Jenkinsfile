@@ -7,25 +7,32 @@ pipeline {
         disableConcurrentBuilds()
         ansiColor('xterm')
     }
+    environment {
+        infra = '10-vpc'
+        nextInfra = '20-sg'
+        prevInfra = ''
+        awsRegion = 'us-east-1'
+        awsCreds = 'aws-creds'
+    }
     parameters {
         choice(name: 'ACTION', choices: ['Create', 'Destroy'], description: 'Select action to create or destroy INFRA')
     }
     stages {
         stage('init') {
             steps {
-                withAWS(region: 'us-east-1', credentials: 'aws-creds') {
-                    sh '''
-                        cd 10-vpc
+                withAWS(region: ${awsRegion}, credentials: ${awsCreds}) {
+                    sh """
+                        cd ${infra}
                         terraform init -reconfigure
-                    '''
+                    """
                 }
             }
         }
         stage('Plan') {
             steps {
-                withAWS(region: 'us-east-1', credentials: 'aws-creds') {
+                withAWS(region: ${awsRegion}, credentials: ${awsCreds}) {
                     sh """
-                        cd 10-vpc
+                        cd ${infra}
                         if [ ${params.ACTION} == 'Create' ]
                         then
                             terraform plan -out=tfplan
@@ -43,11 +50,11 @@ pipeline {
                 ok 'Approve'
             }
             steps{
-                withAWS(region: 'us-east-1', credentials: 'aws-creds') {
-                    sh '''
-                        cd 10-vpc
+                withAWS(region: ${awsRegion}, credentials: ${awsCreds}) {
+                    sh """
+                        cd ${infra}
                         terraform apply -auto-approve tfplan
-                    '''
+                    """
                 }
             }
         }
