@@ -70,6 +70,14 @@ pipeline {
                 }
             }
         }
+        stage("Upstream") {
+            when {
+                expression { params.ACTION == 'Destroy' }
+            }
+            steps {
+                build job: "${prevInfra}", parameters: [string(name:'ACTION', value: 'Create')], wait: false
+            }
+        }
     }
     post {
         always {
