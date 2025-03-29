@@ -8,9 +8,8 @@ pipeline {
         ansiColor('xterm')
     }
     environment {
-        currInfra = '10-vpc,50-acm,70-ecr'
-        nextInfra = ''
-        prevInfra = ''
+        startInfra = '10-vpc,50-acm,70-ecr'
+        endInfra = '40-eks,30-bastion,90-cdn,60-alb,70,ecr'
         awsRegion = 'us-east-1'
         awsCreds = 'aws-creds'
     }
@@ -24,8 +23,20 @@ pipeline {
             }
             steps {
                 script {
-                    for (infra in currInfra.split(",")) {
+                    for (infra in startInfra.split(",")) {
                         build job: "${infra}", parameters: [string(name:'ACTION', value: 'Create')], wait: false
+                    }
+                }
+            }
+        }
+        stage("Destroy Infra") {
+            when {
+                expression { params.ACTION == 'Destroy' }
+            }
+            steps {
+                script {
+                    for (infra in endInfra.split(",")) {
+                        build job: "${infra}", parameters: [string(name:'ACTION', value: 'Destroy')], wait: false
                     }
                 }
             }
