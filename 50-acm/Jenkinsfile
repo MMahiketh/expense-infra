@@ -9,7 +9,7 @@ pipeline {
     }
     environment {
         currInfra = '50-acm'
-        nextInfra = '60-alb'
+        nextInfra = '80-cdn'
         prevInfra = ''
         awsRegion = 'us-east-1'
         awsCreds = 'aws-creds'
