@@ -37,6 +37,20 @@ pipeline {
                 }
             }
         }
+        stage('Apply Changes') {
+            input {
+                message 'Please review the changes and click approve'
+                ok 'Approve'
+            }
+            steps{
+                withAWS(region: 'us-east-1', credentials: 'aws-creds') {
+                    sh '''
+                        cd 10-vpc
+                        terraform apply tfplan
+                    '''
+                }
+            }
+        }
     }
     post {
         always {
