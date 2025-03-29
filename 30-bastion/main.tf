@@ -18,29 +18,29 @@ module "main" {
   )
 }
 
-# configure aws credentials in bastion
-resource "null_resource" "config_eks" {
-  triggers = {
-    instance_id = module.main.id
-  }
+# # configure aws credentials in bastion
+# resource "null_resource" "config_eks" {
+#   triggers = {
+#     instance_id = module.main.id
+#   }
 
-  connection {
-    host        = module.main.public_ip
-    type        = "ssh"
-    user        = "ec2-user"
-    private_key = file("~/devops-shiva/linux-key")
-  }
+#   connection {
+#     host        = module.main.public_ip
+#     type        = "ssh"
+#     user        = "ec2-user"
+#     private_key = file("~/devops-shiva/linux-key")
+#   }
 
-  provisioner "remote-exec" {
-    inline = [
-      # "aws configure set aws_access_key_id ${var.aws_access_key}",
-      # "aws configure set aws_secret_access_key ${var.aws_secret_key}",
-      "aws configure set default.region ${var.aws_default_region}",
-      "curl -sS https://webinstall.dev/k9s | bash",
-      "git clone https://github.com/MMahiketh/k8s-expense.git"
-    ]
-  }
-}
+#   provisioner "remote-exec" {
+#     inline = [
+#       # "aws configure set aws_access_key_id ${var.aws_access_key}",
+#       # "aws configure set aws_secret_access_key ${var.aws_secret_key}",
+#       "aws configure set default.region ${var.aws_default_region}",
+#       "curl -sS https://webinstall.dev/k9s | bash",
+#       "git clone https://github.com/MMahiketh/k8s-expense.git"
+#     ]
+#   }
+# }
 
 resource "aws_route53_record" "workstation" {
   zone_id         = local.zone_id
