@@ -8,9 +8,9 @@ pipeline {
         ansiColor('xterm')
     }
     environment {
-        infra = '20-sg'
-        nextInfra = ''
-        prevInfra = ''
+        currInfra = '20-sg'
+        nextInfra = '30-bastion'
+        prevInfra = '10-vpc'
         awsRegion = 'us-east-1'
         awsCreds = 'aws-creds'
     }
@@ -22,7 +22,7 @@ pipeline {
             steps {
                 withAWS(region: "${awsRegion}", credentials: "${awsCreds}") {
                     sh """
-                        cd ${infra}
+                        cd ${currInfra}
                         terraform init -reconfigure
                     """
                 }
@@ -32,7 +32,7 @@ pipeline {
             steps {
                 withAWS(region: "${awsRegion}", credentials: "${awsCreds}") {
                     sh """
-                        cd ${infra}
+                        cd ${currInfra}
                         if [ ${params.ACTION} == 'Create' ]
                         then
                             terraform plan -out=tfplan
@@ -52,10 +52,18 @@ pipeline {
             steps {
                 withAWS(region: "${awsRegion}", credentials: "${awsCreds}") {
                     sh """
-                        cd ${infra}
+                        cd ${currInfra}
                         terraform apply -auto-approve tfplan
                     """
                 }
+            }
+        }
+        stage('Downstream') {
+            when {
+                expression { params.ACTION == 'Create' }
+            }
+            steps {
+                build job: "${nextInfra}", parameters: [string(name:'ACTION', value: 'Create')], wait: false
             }
         }
     }
