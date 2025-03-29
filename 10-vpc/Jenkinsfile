@@ -5,6 +5,7 @@ pipeline {
     options {
         timeout(time: 30, unit: 'MINUTES')
         disableConcurrentBuilds()
+        ansiColor('xterm')
     }
     parameters {
         choice(name: 'ACTION', choices: ['Create', 'Destroy'], description: 'Select action to create or destroy INFRA')
