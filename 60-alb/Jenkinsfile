@@ -1,0 +1,75 @@
+pipeline {
+    agent {
+        label 'Agent-expense'
+    }
+    options {
+        timeout(time: 30, unit: 'MINUTES')
+        disableConcurrentBuilds()
+        ansiColor('xterm')
+    }
+    environment {
+        currInfra = '60-alb'
+        nextInfra = ''
+        prevInfra = '50-acm'
+        awsRegion = 'us-east-1'
+        awsCreds = 'aws-creds'
+    }
+    parameters {
+        choice(name: 'ACTION', choices: ['Create', 'Destroy'], description: 'Select action to create or destroy INFRA')
+    }
+    stages {
+        stage('init') {
+            steps {
+                withAWS(region: "${awsRegion}", credentials: "${awsCreds}") {
+                    sh """
+                        cd ${currInfra}
+                        terraform init -reconfigure
+                    """
+                }
+            }
+        }
+        stage('Plan') {
+            steps {
+                withAWS(region: "${awsRegion}", credentials: "${awsCreds}") {
+                    sh """
+                        cd ${currInfra}
+                        if [ ${params.ACTION} == 'Create' ]
+                        then
+                            terraform plan -out=tfplan
+                        elif [ ${params.ACTION} == 'Destroy' ]
+                        then
+                            terraform plan -destroy -out=tfplan
+                        fi
+                    """
+                }
+            }
+        }
+        stage('Apply Changes') {
+            input {
+                message 'Please review the changes and click approve'
+                ok 'Approve'
+            }
+            steps {
+                withAWS(region: "${awsRegion}", credentials: "${awsCreds}") {
+                    sh """
+                        cd ${currInfra}
+                        terraform apply -auto-approve tfplan
+                    """
+                }
+            }
+        }
+        // stage('Downstream') {
+        //     when {
+        //         expression { params.ACTION == 'Create' }
+        //     }
+        //     steps {
+        //         build job: "${nextInfra}", parameters: [string(name:'ACTION', value: 'Create')], wait: false
+        //     }
+        // }
+    }
+    post {
+        always {
+            deleteDir()
+        }
+    }
+}
