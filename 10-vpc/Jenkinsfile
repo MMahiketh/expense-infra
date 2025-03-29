@@ -49,7 +49,7 @@ pipeline {
                 message 'Please review the changes and click approve'
                 ok 'Approve'
             }
-            steps{
+            steps {
                 withAWS(region: "${awsRegion}", credentials: "${awsCreds}") {
                     sh """
                         cd ${infra}
