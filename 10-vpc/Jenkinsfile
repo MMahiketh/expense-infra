@@ -15,8 +15,8 @@ pipeline {
             steps {
                 withAWS(region: 'us-east-1', credentials: 'aws-creds') {
                     sh '''
-                    cd 10-vpc
-                    terraform init -reconfigure
+                        cd 10-vpc
+                        terraform init -reconfigure
                     '''
                 }
             }
@@ -25,14 +25,14 @@ pipeline {
             steps {
                 withAWS(region: 'us-east-1', credentials: 'aws-creds') {
                     sh '''
-                    cd 10-vpc
-                    if [ ${params.ACTION} == 'Create' ]
-                    then
-                        terraform plan -out=tfplan
-                    elif [ ${params.ACTION} == 'Destroy' ]
-                    then
-                        terraform plan -destroy -out=tfplan
-                    fi
+                        cd 10-vpc
+                        if [ ${params.ACTION} == 'Create' ]
+                        then
+                            terraform plan -out=tfplan
+                        elif [ ${params.ACTION} == 'Destroy' ]
+                        then
+                            terraform plan -destroy -out=tfplan
+                        fi
                     '''
                 }
             }
