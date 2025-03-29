@@ -1,0 +1,36 @@
+pipeline {
+    agent {
+        label 'Agent-expense'
+    }
+    options {
+        timeout(time: 30, unit: 'MINUTES')
+        disableConcurrentBuilds()
+    }
+    parameters {
+        choice(name: 'ACTION', choices: ['Create', 'Destroy'], description: 'Select action to create or destroy INFRA')
+    }
+    stages {
+        stage('init') {
+            steps {
+                sh '''
+                cd 10-vpc
+                terraform init -reconfigure
+                '''
+            }
+        }
+        stage('Plan') {
+            steps {
+                sh '''
+                cd 10-vpc
+                if [ ${params.ACTION} == 'Create' ]
+                then
+                    terraform plan -out=tfplan
+                elif [ ${params.ACTION} == 'Destroy' ]
+                then
+                    terraform plan -destroy -out=tfplan
+                fi
+                '''
+            }
+        }
+    }
+}
