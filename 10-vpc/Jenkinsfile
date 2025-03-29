@@ -24,7 +24,7 @@ pipeline {
         stage('Plan') {
             steps {
                 withAWS(region: 'us-east-1', credentials: 'aws-creds') {
-                    sh '''
+                    sh """
                         cd 10-vpc
                         if [ ${params.ACTION} == 'Create' ]
                         then
@@ -33,14 +33,14 @@ pipeline {
                         then
                             terraform plan -destroy -out=tfplan
                         fi
-                    '''
+                    """
                 }
             }
         }
     }
-    // post {
-    //     always {
-    //         deleteDir()
-    //     }
-    // }
+    post {
+        always {
+            deleteDir()
+        }
+    }
 }
