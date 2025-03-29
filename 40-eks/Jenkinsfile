@@ -58,14 +58,14 @@ pipeline {
                 }
             }
         }
-        // stage('Downstream') {
-        //     when {
-        //         expression { params.ACTION == 'Create' }
-        //     }
-        //     steps {
-        //         build job: "${nextInfra}", parameters: [string(name:'ACTION', value: 'Create')], wait: false
-        //     }
-        // }
+        stage('Upstream') {
+            when {
+                expression { params.ACTION == 'Destroy' }
+            }
+            steps {
+                build job: "${prevInfra}", parameters: [string(name:'ACTION', value: 'Destroy')], wait: false
+            }
+        }
     }
     post {
         always {

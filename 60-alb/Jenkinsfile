@@ -10,7 +10,7 @@ pipeline {
     environment {
         currInfra = '60-alb'
         nextInfra = ''
-        prevInfra = '50-acm,20-sg'
+        prevInfra = '50-acm'
         awsRegion = 'us-east-1'
         awsCreds = 'aws-creds'
     }
@@ -58,14 +58,14 @@ pipeline {
                 }
             }
         }
-        // stage('Downstream') {
-        //     when {
-        //         expression { params.ACTION == 'Create' }
-        //     }
-        //     steps {
-        //         build job: "${nextInfra}", parameters: [string(name:'ACTION', value: 'Create')], wait: false
-        //     }
-        // }
+        stage('Upstream') {
+            when {
+                expression { params.ACTION == 'Destroy' }
+            }
+            steps {
+                build job: "${prevInfra}", parameters: [string(name:'ACTION', value: 'Destroy')], wait: false
+            }
+        }
     }
     post {
         always {

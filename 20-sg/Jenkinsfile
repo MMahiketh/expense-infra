@@ -75,7 +75,7 @@ pipeline {
                 expression { params.ACTION == 'Destroy' }
             }
             steps {
-                build job: "${prevInfra}", parameters: [string(name:'ACTION', value: 'Create')], wait: false
+                build job: "${prevInfra}", parameters: [string(name:'ACTION', value: 'Destroy')], wait: false
             }
         }
     }
