@@ -13,24 +13,28 @@ pipeline {
     stages {
         stage('init') {
             steps {
-                sh '''
-                    cd 10-vpc
-                    terraform init -reconfigure
-                '''
+                withAWS(region: 'us-east-1', credentials: 'aws-creds') {
+                    sh '''
+                        cd 10-vpc
+                        terraform init -reconfigure
+                    '''
+                }
             }
         }
         stage('Plan') {
             steps {
-                sh """
-                    cd 10-vpc
-                    if [ ${params.ACTION} == 'Create' ]
-                    then
-                        terraform plan -out=tfplan
-                    elif [ ${params.ACTION} == 'Destroy' ]
-                    then
-                        terraform plan -destroy -out=tfplan
-                    fi
-                """
+                withAWS(region: 'us-east-1', credentials: 'aws-creds') {
+                    sh """
+                        cd 10-vpc
+                        if [ ${params.ACTION} == 'Create' ]
+                        then
+                            terraform plan -out=tfplan
+                        elif [ ${params.ACTION} == 'Destroy' ]
+                        then
+                            terraform plan -destroy -out=tfplan
+                        fi
+                    """
+                }
             }
         }
     }
