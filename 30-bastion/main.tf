@@ -33,8 +33,8 @@ resource "null_resource" "config_eks" {
 
   provisioner "remote-exec" {
     inline = [
-      "aws configure set aws_access_key_id ${var.aws_access_key}",
-      "aws configure set aws_secret_access_key ${var.aws_secret_key}",
+      # "aws configure set aws_access_key_id ${var.aws_access_key}",
+      # "aws configure set aws_secret_access_key ${var.aws_secret_key}",
       "aws configure set default.region ${var.aws_default_region}",
       "curl -sS https://webinstall.dev/k9s | bash",
       "git clone https://github.com/MMahiketh/k8s-expense.git"
