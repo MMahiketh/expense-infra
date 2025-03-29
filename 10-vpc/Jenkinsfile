@@ -60,7 +60,7 @@ pipeline {
         }
         stage('Downstream') {
             when {
-                expression { params.Action == 'Create' }
+                expression { params.ACTION == 'Create' }
             }
             steps {
                 build job: "${nextInfra}", parameters: [string(name:'ACTION', value: 'Create')], wait: false
