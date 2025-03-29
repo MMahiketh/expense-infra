@@ -9,7 +9,7 @@ pipeline {
     }
     environment {
         startInfra = '10-vpc,50-acm,70-ecr'
-        endInfra = '40-eks,30-bastion,90-cdn,60-alb,70,ecr'
+        endInfra = '40-eks,30-bastion,80-cdn,60-alb,70,ecr'
         awsRegion = 'us-east-1'
         awsCreds = 'aws-creds'
     }
