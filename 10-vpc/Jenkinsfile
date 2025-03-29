@@ -20,7 +20,7 @@ pipeline {
     stages {
         stage('init') {
             steps {
-                withAWS(region: ${awsRegion}, credentials: ${awsCreds}) {
+                withAWS(region: "${awsRegion}", credentials: "${awsCreds}") {
                     sh """
                         cd ${infra}
                         terraform init -reconfigure
@@ -30,7 +30,7 @@ pipeline {
         }
         stage('Plan') {
             steps {
-                withAWS(region: ${awsRegion}, credentials: ${awsCreds}) {
+                withAWS(region: "${awsRegion}", credentials: "${awsCreds}") {
                     sh """
                         cd ${infra}
                         if [ ${params.ACTION} == 'Create' ]
@@ -50,7 +50,7 @@ pipeline {
                 ok 'Approve'
             }
             steps{
-                withAWS(region: ${awsRegion}, credentials: ${awsCreds}) {
+                withAWS(region: "${awsRegion}", credentials: "${awsCreds}") {
                     sh """
                         cd ${infra}
                         terraform apply -auto-approve tfplan
