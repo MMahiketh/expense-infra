@@ -35,6 +35,7 @@ pipeline {
                         cd ${currInfra}
                         if [ ${params.ACTION} == 'Create' ]
                         then
+                            pwd
                             terraform plan -var-file=secret.tfvars -out=tfplan
                         elif [ ${params.ACTION} == 'Destroy' ]
                         then
