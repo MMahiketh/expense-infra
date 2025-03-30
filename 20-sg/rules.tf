@@ -26,6 +26,15 @@ resource "aws_security_group_rule" "bastion_control_plane" {
   security_group_id        = module.control_plane.id
 }
 
+resource "aws_security_group_rule" "bastion_mysql" {
+  type                     = "ingress"
+  from_port                = var.mysql_port
+  to_port                  = var.mysql_port
+  protocol                 = "tcp"
+  source_security_group_id = module.bastion.id
+  security_group_id        = module.mysql.id
+}
+
 resource "aws_security_group_rule" "control_plane_node" {
   type                     = "ingress"
   from_port                = 0
