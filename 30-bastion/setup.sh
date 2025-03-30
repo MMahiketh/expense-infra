@@ -68,7 +68,10 @@ cd /tmp
   # git
     yum -y install git &>> $LOG_FILE
     VALIDATE $? "Installing git"
- # docker
+  # mysql
+    dnf -y install mysql &>> $LOG_FILE
+    VALIDATE $? "Installing mysql"
+  # docker
     yum -y install docker &>> $LOG_FILE
     VALIDATE $? "Installing docker"
   # k8s
