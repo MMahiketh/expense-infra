@@ -7,7 +7,7 @@ terraform {
   }
   backend "s3" {
     bucket         = "expense-dev-state-files"
-    key            = "expense-infra-dev-rds"
+    key            = "expense-dev-eks-rds"
     region         = "us-east-1"
     dynamodb_table = "expense-dev-locking"
   }
