@@ -69,7 +69,7 @@ cd /tmp
     yum -y install git &>> $LOG_FILE
     VALIDATE $? "Installing git"
   # mysql
-    dnf -y install mysql &>> $LOG_FILE
+    dnf -y install mariadb105 &>> $LOG_FILE
     VALIDATE $? "Installing mysql"
   # docker
     yum -y install docker &>> $LOG_FILE
