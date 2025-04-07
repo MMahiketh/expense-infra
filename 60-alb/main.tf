@@ -56,7 +56,7 @@ module "records" {
 
 resource "aws_lb_target_group" "expense" {
   name        = local.resource_name
-  port        = 80
+  port        = 8080
   protocol    = "HTTP"
   vpc_id      = local.vpc_id
   target_type = "ip"
@@ -67,7 +67,7 @@ resource "aws_lb_target_group" "expense" {
     interval            = 5
     matcher             = "200-299"
     path                = "/"
-    port                = 80
+    port                = 8080
     protocol            = "HTTP"
     timeout             = 4
   }
