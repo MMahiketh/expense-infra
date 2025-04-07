@@ -76,7 +76,7 @@ curl -sS https://webinstall.dev/k9s | bash
 # setup AWS Load Balancer Controller
 # Ingress Controller
 #### Create an IAM OIDC provider
-eksctl utils associate-iam-oidc-provider --region us-east-1 --cluster expense --approve
+eksctl utils associate-iam-oidc-provider --region us-east-1 --cluster expense-dev --approve
 #### Download IAM policy
 curl -o iam-policy.json https://raw.githubusercontent.com/kubernetes-sigs/aws-load-balancer-controller/v2.11.0/docs/install/iam_policy.json
 #### Create an IAM policy using above file
